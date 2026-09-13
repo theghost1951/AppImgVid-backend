@@ -8,6 +8,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 app = FastAPI(title="AppImgVid Backend")
+from fastapi.staticfiles import StaticFiles
+import os
+os.makedirs("videos", exist_ok=True)
+app.mount("/videos", StaticFiles(directory="videos"), name="videos")
 security = HTTPBearer()
 
 client = OpenAI(
