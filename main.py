@@ -85,7 +85,7 @@ def generate(image: UploadFile = File(...), motion_prompt: str = Form(""), crede
         if os.path.exists(input_path):
             os.remove(input_path)
 
-        return {"job_id": job_id, "video_url": f"/videos/{job_id}.mp4"}
+            return {"job_id": job_id, "video_url": f"https://appimgvid-backend2026.onrender.com/videos/{job_id}.mp4"}
 
     except HTTPException:
         raise
