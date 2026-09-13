@@ -1,8 +1,5 @@
 fastapi
-uvicorn[standard]
+uvicorn
 python-multipart
-openai
-python-dotenv
 pyjwt
-sqlalchemy
 requests
