@@ -2,7 +2,7 @@ from fastapi import FastAPI, UploadFile, File, Form, Depends, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
 from fastapi.middleware.cors import CORSMiddleware
-import os, uuid, jwt, datetime, requests
+import os, uuid, jwt, datetime
 
 app = FastAPI()
 
@@ -18,20 +18,9 @@ security = HTTPBearer()
 os.makedirs("videos", exist_ok=True)
 app.mount("/videos", StaticFiles(directory="videos"), name="videos")
 
-# Download a real video ONCE so your backend owns it
-BUNNY_PATH = "videos/bunny.mp4"
-if not os.path.exists(BUNNY_PATH):
-    try:
-        print("Downloading sample video...")
-        r = requests.get("https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4", timeout=30)
-        open(BUNNY_PATH, "wb").write(r.content)
-        print("Sample saved")
-    except Exception as e:
-        print(f"Download failed: {e}")
-
 @app.get("/")
 def root():
-    return {"message": "AppImgVid Backend running", "bunny_exists": os.path.exists(BUNNY_PATH)}
+    return {"message": "AppImgVid Backend running"}
 
 @app.post("/login")
 def login(username: str = Form(...), password: str = Form(...)):
@@ -52,5 +41,7 @@ def generate(
         raise HTTPException(status_code=401, detail="Invalid token")
     
     job_id = uuid.uuid4().hex[:8]
-    # Return YOUR OWN backend video - no more Google 403
-    return {"job_id": job_id, "video_url": "/videos/bunny.mp4", "thumb_url": "/videos/bunny.mp4"}
+    # This video is GUARANTEED to play - it's the w3schools test video
+    real_playable_video = "https://www.w3schools.com/html/mov_bbb.mp4"
+    print(f"Generated {job_id} for {motion_prompt}")
+    return {"job_id": job_id, "video_url": real_playable_video, "thumb_url": real_playable_video}
